@@ -4,6 +4,11 @@
 #include <string.h>
 
 
+#define AUDIO_FORMAT 1    // Pulse-Code Modulation (PCM)
+#define NUM_CHANNELS 1
+#define SAMPLE_RATE 44100
+#define BITS_PER_SAMPLE 8
+
 /** 
  * WAVE file consists of a file header followed by data chunks
  * Each file has a single "wave" chunk which consists of:
@@ -39,11 +44,11 @@ int write_wav(uint8_t samples[], uint32_t num_samples) {
 	memcpy(&wav.format, "WAVE", 4);
 	// FMT sub-chunk
 	memcpy(&wav.subchunk1_id, "fmt ", 4);
-	wav.subchunk1_size = 16;  // sizeof rest of subchunk
-	wav.audio_format = 1;     // PCM
-	wav.num_channels = 1;     // MONO
-	wav.sample_rate = 44100;
-	wav.bits_per_sample = 8;
+	wav.subchunk1_size = 16;  // sizeof rest of this subchunk excluding ID
+	wav.audio_format = AUDIO_FORMAT;
+	wav.num_channels = NUM_CHANNELS; 
+	wav.sample_rate = SAMPLE_RATE;
+	wav.bits_per_sample = BITS_PER_SAMPLE;
 	wav.byte_rate = wav.sample_rate * wav.num_channels * wav.bits_per_sample / 8;
 	// DATA sub-chunk
 	memcpy(&wav.subchunk2_id, "data", 4);  // == "DATA" (big-endian)
@@ -64,8 +69,26 @@ int write_wav(uint8_t samples[], uint32_t num_samples) {
 	return 0;
 }
 
+/** 
+	* Adds a tone with frequency FREQ to DATA. For a pure tone, make
+	* sure to zero the DATA array before adding tones
+	*/
+void add_tone(uint8_t data[], uint32_t num_samples, uint32_t freq, uint8_t magnitude) {
+	uint32_t sample_freq = SAMPLE_RATE / freq;
+	for (int i = 0; i < num_samples; i += 1) {
+		if (i % sample_freq == 0) {
+			data[i] = magnitude;
+		}
+	}
+}
+
 int main() {
-	uint32_t num_samples = 44100;
+	uint32_t num_samples = SAMPLE_RATE * 4;  // four seconds
 	uint8_t data[num_samples];
+	memset(data, 0, num_samples);
+	// Major Triad: A-C#-E
+	add_tone(data, num_samples, 440, 255);
+	add_tone(data + SAMPLE_RATE, num_samples - SAMPLE_RATE, 554, 255);
+	add_tone(data + SAMPLE_RATE * 2, num_samples - SAMPLE_RATE * 2, 659, 255);
 	write_wav(data, num_samples);
 }
