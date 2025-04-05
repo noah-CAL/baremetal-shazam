@@ -21,7 +21,7 @@ SOURCES := $(wildcard *.c)
 OBJECTS := $(patsubst %.c,%.o,$(SOURCES)) # pattern, replacement, text
 DEPENDS := $(patsubst %.c,%.h,$(SOURCES))
 
-EXE := main
+EXE := main.out
 
 all: $(OBJECTS)
 	$(CC) $^ -o $(EXE) $(CFLAGS)
