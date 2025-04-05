@@ -27,14 +27,14 @@
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 8
 
-/** 
+/*
  * WAVE file consists of a file header followed by data chunks
  * Each file has a single "wave" chunk which consists of:
  * 1) "fmt" chunk to specify the data format
  * 2) "data" chunk that contains the sample data
  *
  * https://docs.fileformat.com/audio/wav/ 
- * */
+ */
 typedef struct {
 	// RIFF chunk descriptor
 	uint32_t chunk_id;     // == "WAVE" (big-endian)
@@ -87,10 +87,9 @@ int write_wav(uint8_t samples[], uint32_t num_samples) {
 	return 0;
 }
 
-/** 
-	* Adds a tone with frequency FREQ to DATA. For a pure tone, make
-	* sure to zero the DATA array before adding tones
-	*/
+/* Adds a tone with frequency FREQ to DATA. For a pure tone, make
+ * sure to zero the DATA array before adding tones
+ */
 void add_tone(uint8_t data[], uint32_t num_samples, uint32_t freq, uint8_t magnitude) {
 	uint32_t sample_freq = SAMPLE_RATE / freq;
 	for (int i = 0; i < num_samples; i += 1) {

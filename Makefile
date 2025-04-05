@@ -17,7 +17,7 @@
 CC = gcc
 CFLAGS = -g -ggdb
 
-SOURCES := $(wildcard *.c)
+SOURCES := $(wildcard src/*.c)
 OBJECTS := $(patsubst %.c,%.o,$(SOURCES)) # pattern, replacement, text
 DEPENDS := $(patsubst %.c,%.h,$(SOURCES))
 
@@ -27,7 +27,7 @@ all: $(OBJECTS)
 	$(CC) $^ -o $(EXE) $(CFLAGS)
 
 %.o: %.c %.h Makefile
-	$(CC) -c $< $(CFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 .PHONY: all clean
 clean:
