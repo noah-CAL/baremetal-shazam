@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+# Data Files
+data.h
+*.wav
+
 # Object files
 *.o
 *.ko
@@ -35,7 +39,6 @@
 *.i*86
 *.x86_64
 *.hex
-*.wav
 
 # Debug files
 *.dSYM/

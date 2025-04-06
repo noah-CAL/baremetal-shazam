@@ -75,14 +75,17 @@ int write_wav(uint8_t samples[], uint32_t num_samples) {
 	FILE *f = fopen("output.wav", "w");
 	if (!f) {
 		perror("Error while opening 'output.wav'\n");
+		return -1;
 	}
 	int err = fwrite(&wav, sizeof(wav), 1, f);
 	if (!err) {
 		perror("Error while writing header to 'output.wav'\n");
+		return err;
 	}
 	err = fwrite(samples, sizeof(*samples), num_samples, f);
 	if (!err) {
 		perror("Error while writing data to 'output.wav'\n");
+		return err;
 	}
 	return 0;
 }
